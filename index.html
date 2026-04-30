@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>龙鸣 · 雨中人</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Share+Tech+Mono&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0c08;
+  --bg2: #0f120b;
+  --amber: #c8922a;
+  --amber-dim: #7a5518;
+  --amber-glow: #e8b84b;
+  --green: #2a4a1a;
+  --green-bright: #4a8a2a;
+  --ink: #d4c49a;
+  --ink-dim: #7a7060;
+  --ink-faint: #2a2820;
+  --scan: rgba(200,146,42,0.03);
+  --noise-opacity: 0.06;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Share Tech Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* SCANLINES */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--scan) 2px,
+    var(--scan) 4px
+  );
+}
+
+/* CRT VIGNETTE */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
+}
+
+/* NOISE TEXTURE */
+.noise {
+  position: fixed; inset: 0; z-index: 9997; pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+/* ── HEADER ── */
+header {
+  padding: 2rem 0 1.5rem;
+  border-bottom: 1px solid var(--amber-dim);
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.header-left { display: flex; flex-direction: column; gap: 4px; }
+.sys-tag { font-size: 10px; letter-spacing: 0.3em; color: var(--amber-dim); }
+.site-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 28px; font-weight: 600;
+  color: var(--amber-glow);
+  text-shadow: 0 0 20px rgba(232,184,75,0.4);
+  letter-spacing: 0.1em;
+}
+.header-right { text-align: right; }
+.header-status { font-size: 10px; color: var(--amber-dim); letter-spacing: 0.15em; line-height: 1.8; }
+.blink { animation: blink 1.2s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+nav { display: flex; gap: 2rem; margin-top: 1.5rem; padding-bottom: 0; }
+nav a {
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink-dim); text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+nav a:hover { color: var(--amber-glow); border-color: var(--amber-dim); }
+
+/* ── HERO ── */
+.hero {
+  padding: 5rem 0 4rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+}
+.hero-text { }
+.hero-label { font-size: 10px; letter-spacing: 0.3em; color: var(--amber-dim); margin-bottom: 1rem; }
+.hero-callsign {
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 72px; line-height: 1;
+  color: var(--amber-glow);
+  text-shadow: 0 0 40px rgba(232,184,75,0.3), 0 0 80px rgba(232,184,75,0.1);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
+}
+.hero-alias {
+  font-size: 12px; letter-spacing: 0.25em; color: var(--amber-dim);
+  margin-bottom: 2rem;
+  border-left: 2px solid var(--amber-dim);
+  padding-left: 1rem;
+  line-height: 2;
+}
+.hero-quote {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 15px; color: var(--ink); line-height: 1.8;
+  font-weight: 300;
+}
+.hero-quote em { color: var(--amber); font-style: normal; }
+
+/* TYPEWRITER */
+.typewriter { overflow: hidden; white-space: nowrap; border-right: 2px solid var(--amber); width: 0; animation: type 2s steps(12, end) 0.5s forwards, cursor-blink 0.8s step-end 2.5s infinite; }
+@keyframes type { to { width: 100%; } }
+@keyframes cursor-blink { 50% { border-color: transparent; } }
+
+/* ── SPHERE SECTION ── */
+#mind-sphere { padding: 3rem 0; border-top: 1px solid var(--ink-faint); }
+.sec-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+.sec-label { font-size: 10px; letter-spacing: 0.3em; color: var(--amber-dim); }
+.sec-line { flex: 1; height: 1px; background: var(--ink-faint); }
+
+.sphere-container {
+  position: relative;
+  width: 100%; height: 520px;
+  display: flex; align-items: center; justify-content: center;
+}
+.sphere-hint {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  font-size: 10px; letter-spacing: 0.2em; color: var(--ink-dim);
+  pointer-events: none;
+}
+canvas#sphere { cursor: grab; }
+canvas#sphere:active { cursor: grabbing; }
+
+/* ── ABOUT ── */
+#about { padding: 4rem 0; border-top: 1px solid var(--ink-faint); }
+.about-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: start; }
+.about-sidebar { }
+.about-coord { font-size: 10px; letter-spacing: 0.15em; color: var(--amber-dim); line-height: 2.2; }
+.about-body {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 16px; line-height: 2; color: var(--ink);
+  font-weight: 300;
+}
+.about-body p + p { margin-top: 1.2rem; }
+.about-body strong { color: var(--amber); font-weight: 400; }
+
+/* ── PROJECTS ── */
+#projects { padding: 4rem 0; border-top: 1px solid var(--ink-faint); }
+.project-row {
+  display: grid; grid-template-columns: 80px 1fr auto;
+  align-items: center; gap: 2rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--ink-faint);
+  transition: background 0.2s;
+  text-decoration: none; color: inherit;
+}
+.project-row:first-of-type { border-top: 1px solid var(--ink-faint); }
+.project-row:hover { background: rgba(200,146,42,0.03); }
+.project-row:hover .proj-name { color: var(--amber-glow); }
+.project-row:hover .proj-arrow { opacity: 1; transform: translateX(0); color: var(--amber); }
+.proj-num { font-size: 10px; letter-spacing: 0.2em; color: var(--amber-dim); }
+.proj-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px; color: var(--ink); transition: color 0.2s;
+  margin-bottom: 4px;
+}
+.proj-desc { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.08em; }
+.proj-arrow { color: var(--ink-dim); opacity: 0; transform: translateX(-8px); transition: all 0.2s; font-size: 16px; }
+
+/* ── CONTACT ── */
+#contact { padding: 4rem 0 5rem; border-top: 1px solid var(--ink-faint); }
+.contact-row { display: flex; gap: 4rem; flex-wrap: wrap; }
+.contact-item { display: flex; flex-direction: column; gap: 4px; }
+.contact-key { font-size: 10px; letter-spacing: 0.25em; color: var(--amber-dim); }
+.contact-val { font-size: 13px; color: var(--ink-dim); }
+.contact-val a { color: var(--ink); text-decoration: none; transition: color 0.2s; }
+.contact-val a:hover { color: var(--amber-glow); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--amber-dim);
+  padding: 1.5rem 0 2rem;
+  display: flex; justify-content: space-between;
+  font-size: 10px; letter-spacing: 0.15em; color: var(--amber-dim);
+}
+
+/* ── GLITCH EFFECT ── */
+@keyframes glitch {
+  0%, 95%, 100% { transform: translate(0); clip-path: none; }
+  96% { transform: translate(-2px, 1px); clip-path: inset(20% 0 50% 0); color: #ff6b35; }
+  97% { transform: translate(2px, -1px); clip-path: inset(60% 0 10% 0); color: #35b5ff; }
+  98% { transform: translate(-1px, 0); clip-path: none; }
+}
+.site-name:hover { animation: glitch 0.3s ease; }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <span class="sys-tag">// SYS.INIT ── 识别码: LMY-2157</span>
+      <span class="site-name">龙鸣</span>
+    </div>
+    <div class="header-right">
+      <div class="header-status">
+        LOCATION: 大阪 · 34°N<br>
+        STATUS: <span style="color:var(--green-bright)">ONLINE</span> <span class="blink">█</span><br>
+        SIGNAL: ████████░░ 82%
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <a href="#mind-sphere">思维球</a>
+    <a href="#about">档案</a>
+    <a href="#projects">项目</a>
+    <a href="#contact">联络</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-text">
+      <p class="hero-label">// 江湖代号</p>
+      <h1 class="hero-callsign">雨中人</h1>
+      <div class="hero-alias">
+        <div>姓名 ── 龙鸣</div>
+        <div>坐标 ── 大阪 → 火星（筹）</div>
+        <div>身份 ── 开发者 · 思想者</div>
+      </div>
+      <p class="hero-quote">
+        <span class="typewriter">想去火星种土豆。</span>
+      </p>
+    </div>
+    <div style="position:relative; display:flex; align-items:center; justify-content:center; height: 300px;">
+      <!-- mini decorative star map -->
+      <svg width="300" height="280" viewBox="0 0 300 280" style="opacity:0.6">
+        <defs>
+          <radialGradient id="mars" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#c8401a"/>
+            <stop offset="100%" stop-color="#5a1a08"/>
+          </radialGradient>
+          <radialGradient id="earth" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#2a6a4a"/>
+            <stop offset="100%" stop-color="#0a2a1a"/>
+          </radialGradient>
+        </defs>
+        <!-- orbit lines -->
+        <ellipse cx="150" cy="140" rx="120" ry="40" fill="none" stroke="#c8922a" stroke-width="0.5" stroke-dasharray="4 6" opacity="0.4"/>
+        <ellipse cx="150" cy="140" rx="80" ry="26" fill="none" stroke="#c8922a" stroke-width="0.5" stroke-dasharray="3 5" opacity="0.3"/>
+        <!-- sun -->
+        <circle cx="150" cy="140" r="8" fill="#e8b84b" opacity="0.9"/>
+        <circle cx="150" cy="140" r="14" fill="none" stroke="#e8b84b" stroke-width="0.5" opacity="0.3"/>
+        <!-- earth -->
+        <circle cx="72" cy="129" r="6" fill="url(#earth)"/>
+        <!-- mars -->
+        <circle cx="258" cy="148" r="9" fill="url(#mars)"/>
+        <!-- dotted path -->
+        <path d="M 78 126 Q 160 40 252 145" fill="none" stroke="#c8922a" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>
+        <!-- labels -->
+        <text x="62" y="118" font-family="Share Tech Mono" font-size="9" fill="#c8922a" opacity="0.8">地球</text>
+        <text x="250" y="138" font-family="Share Tech Mono" font-size="9" fill="#c85a2a" opacity="0.8">火星</text>
+        <text x="158" y="136" font-family="Share Tech Mono" font-size="8" fill="#e8b84b" opacity="0.6">太阳</text>
+        <!-- stars -->
+        <g fill="#d4c49a" opacity="0.5">
+          <circle cx="30" cy="30" r="1"/><circle cx="85" cy="15" r="0.8"/>
+          <circle cx="200" cy="20" r="1.2"/><circle cx="270" cy="45" r="0.8"/>
+          <circle cx="15" cy="80" r="0.6"/><circle cx="290" cy="90" r="1"/>
+          <circle cx="40" cy="200" r="0.8"/><circle cx="260" cy="220" r="1"/>
+          <circle cx="120" cy="250" r="0.6"/><circle cx="180" cy="260" r="0.8"/>
+          <circle cx="50" cy="260" r="1"/><circle cx="295" cy="170" r="0.7"/>
+        </g>
+        <!-- 「志在火星」 stamp -->
+        <rect x="95" y="195" width="110" height="32" rx="2" fill="none" stroke="#c8922a" stroke-width="1" opacity="0.5"/>
+        <text x="150" y="216" font-family="Noto Serif SC, serif" font-size="13" fill="#c8922a" opacity="0.7" text-anchor="middle" letter-spacing="6">志在火星</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- SPHERE -->
+  <section id="mind-sphere">
+    <div class="sec-header">
+      <span class="sec-label">// 思维星球 ── 拖拽旋转</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="sphere-container">
+      <canvas id="sphere" width="700" height="500"></canvas>
+      <p class="sphere-hint">DRAG TO ROTATE · 点子在轨道间游走</p>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="sec-header">
+      <span class="sec-label">// 人物档案</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-sidebar">
+        <div class="about-coord">
+          REF#: LMY-2157<br>
+          等级: 游侠<br>
+          ──────────<br>
+          技能:<br>
+          ■ 开发 ████░<br>
+          ■ 想象 █████<br>
+          ■ 种薯 ░░░░░<br>
+          ──────────<br>
+          状态: 活跃<br>
+          上线: 大阪<br>
+        </div>
+      </div>
+      <div class="about-body">
+        <p>行走江湖，以代码为兵器。对一切<strong>不合理的存在</strong>怀有好奇——楼房为何像电容，古人如何刹车，水流声与炒菜声究竟有何不同。</p>
+        <p>相信工具应该消失在使用中，相信<strong>好的问题</strong>比答案更值钱。目前在大阪，志在火星，中间的路还没想好。</p>
+        <p>日料不过是<strong>吃个调</strong>，格言不如刻在手腕上。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="sec-header">
+      <span class="sec-label">// 在役项目</span>
+      <div class="sec-line"></div>
+    </div>
+    <a href="https://github.com/longming" class="project-row">
+      <span class="proj-num">// 001</span>
+      <div>
+        <p class="proj-name">时间记录</p>
+        <p class="proj-desc">快捷记录时间消耗的工具 · A quick time-tracking tool</p>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="sec-header">
+      <span class="sec-label">// 联络方式</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="contact-row">
+      <div class="contact-item">
+        <span class="contact-key">GITHUB</span>
+        <span class="contact-val"><a href="https://github.com/longming" target="_blank">github.com/longming</a></span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-key">EMAIL</span>
+        <span class="contact-val"><a href="mailto:hello@example.com">hello@example.com</a></span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-key">LOCATION</span>
+        <span class="contact-val">大阪 · 日本</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>龙鸣 · 雨中人 · LMY-2157</span>
+    <span>2025 · 志在火星</span>
+  </footer>
+
+</div><!-- /wrap -->
+
+<script>
+// ── THOUGHT SPHERE ──────────────────────────────────────────
+const canvas = document.getElementById('sphere');
+const ctx = canvas.getContext('2d');
+
+// Responsive canvas
+function resizeCanvas() {
+  const w = Math.min(700, canvas.parentElement.offsetWidth);
+  canvas.width = w;
+  canvas.height = Math.min(500, w * 0.72);
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); });
+
+const ideas = [
+  '去火星种土豆',
+  '水流声',
+  '炒菜声',
+  '古代怎么刹车',
+  '日料就是吃个调',
+  '楼房像电容',
+  '格言手环',
+];
+
+// Build nodes on sphere surface using Fibonacci lattice
+const R = Math.min(canvas.width, canvas.height) * 0.32;
+const nodes = ideas.map((text, i) => {
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  const y = 1 - (i / (ideas.length - 1)) * 2;
+  const radius = Math.sqrt(1 - y * y);
+  const theta = golden * i;
+  return {
+    text,
+    x: Math.cos(theta) * radius,
+    y: y,
+    z: Math.sin(theta) * radius,
+    // screen coords
+    sx: 0, sy: 0,
+    size: 0,
+    pulse: Math.random() * Math.PI * 2,
+    pulseSpeed: 0.02 + Math.random() * 0.02,
+  };
+});
+
+// Edges: connect nearby nodes
+const edges = [];
+for (let i = 0; i < nodes.length; i++) {
+  for (let j = i + 1; j < nodes.length; j++) {
+    const dx = nodes[i].x - nodes[j].x;
+    const dy = nodes[i].y - nodes[j].y;
+    const dz = nodes[i].z - nodes[j].z;
+    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    if (dist < 1.4) edges.push({ a: i, b: j, dist, phase: Math.random() * Math.PI * 2 });
+  }
+}
+
+let rotX = 0.3, rotY = 0;
+let velX = 0, velY = 0.004;
+let isDragging = false, lastMX = 0, lastMY = 0;
+let t = 0;
+
+canvas.addEventListener('mousedown', e => { isDragging = true; lastMX = e.clientX; lastMY = e.clientY; });
+window.addEventListener('mouseup', () => isDragging = false);
+window.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const dx = e.clientX - lastMX;
+  const dy = e.clientY - lastMY;
+  velY = dx * 0.005;
+  velX = dy * 0.005;
+  lastMX = e.clientX; lastMY = e.clientY;
+});
+
+canvas.addEventListener('touchstart', e => { isDragging = true; lastMX = e.touches[0].clientX; lastMY = e.touches[0].clientY; });
+window.addEventListener('touchend', () => isDragging = false);
+window.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  const dx = e.touches[0].clientX - lastMX;
+  const dy = e.touches[0].clientY - lastMY;
+  velY = dx * 0.005;
+  velX = dy * 0.005;
+  lastMX = e.touches[0].clientX; lastMY = e.touches[0].clientY;
+});
+
+function rotatePoint(node) {
+  // Rotate around Y axis
+  let x = node.x * Math.cos(rotY) - node.z * Math.sin(rotY);
+  let z = node.x * Math.sin(rotY) + node.z * Math.cos(rotY);
+  let y = node.y;
+  // Rotate around X axis
+  let y2 = y * Math.cos(rotX) - z * Math.sin(rotX);
+  let z2 = y * Math.sin(rotX) + z * Math.cos(rotX);
+  return { rx: x, ry: y2, rz: z2 };
+}
+
+function project(rx, ry, rz) {
+  const fov = 2.2;
+  const scale = (fov / (fov + rz)) * R;
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  return { sx: cx + rx * scale, sy: cy - ry * scale, scale };
+}
+
+function draw() {
+  t += 0.016;
+  if (!isDragging) {
+    velY *= 0.97;
+    velX *= 0.97;
+    velY += 0.003;
+  }
+  rotY += velY;
+  rotX += velX;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw faint sphere wireframe
+  const cx = canvas.width / 2, cy = canvas.height / 2;
+  for (let i = 0; i < 3; i++) {
+    const angle = (i / 3) * Math.PI;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, R, R * Math.abs(Math.sin(angle + rotY)), 0, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(200,146,42,0.06)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+  // Equator
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, R, R * 0.15, 0, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(200,146,42,0.08)';
+  ctx.lineWidth = 0.5;
+  ctx.stroke();
+
+  // Project all nodes
+  const projected = nodes.map(node => {
+    const { rx, ry, rz } = rotatePoint(node);
+    const { sx, sy, scale } = project(rx, ry, rz);
+    node.sx = sx; node.sy = sy;
+    node.rz = rz;
+    return { node, rx, ry, rz, sx, sy, scale };
+  });
+
+  // Sort by Z
+  projected.sort((a, b) => a.rz - b.rz);
+
+  // Draw edges (brainwave connections)
+  edges.forEach(edge => {
+    const a = projected.find(p => p.node === nodes[edge.a]);
+    const b = projected.find(p => p.node === nodes[edge.b]);
+    if (!a || !b) return;
+
+    const avgZ = (a.rz + b.rz) / 2;
+    const visible = avgZ > -0.2;
+    const alpha = ((avgZ + 1) / 2) * 0.5;
+
+    // Pulse along edge
+    const pulse = (Math.sin(t * 2 + edge.phase) + 1) / 2;
+
+    if (visible) {
+      // Base line
+      ctx.beginPath();
+      ctx.moveTo(a.sx, a.sy);
+      ctx.lineTo(b.sx, b.sy);
+      ctx.strokeStyle = `rgba(200,146,42,${alpha * 0.25})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      // Pulse dot traveling along edge
+      const px = a.sx + (b.sx - a.sx) * pulse;
+      const py = a.sy + (b.sy - a.sy) * pulse;
+      ctx.beginPath();
+      ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(232,184,75,${alpha * 0.8})`;
+      ctx.fill();
+    }
+  });
+
+  // Draw nodes (back to front)
+  projected.forEach(({ node, rz, sx, sy, scale }) => {
+    const depth = (rz + 1) / 2; // 0=back, 1=front
+    const alpha = 0.3 + depth * 0.7;
+    const nodeSize = (8 + depth * 6) * (scale / R);
+    node.pulse += node.pulseSpeed;
+
+    // Glow ring
+    const ringR = nodeSize * (1.8 + Math.sin(node.pulse) * 0.3);
+    const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, ringR);
+    grad.addColorStop(0, `rgba(200,146,42,${alpha * 0.3})`);
+    grad.addColorStop(1, 'rgba(200,146,42,0)');
+    ctx.beginPath();
+    ctx.arc(sx, sy, ringR, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Core dot
+    ctx.beginPath();
+    ctx.arc(sx, sy, nodeSize * 0.55, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(232,184,75,${alpha * 0.9})`;
+    ctx.fill();
+
+    // Label
+    const fontSize = Math.max(10, Math.round((11 + depth * 4) * (scale / R)));
+    ctx.font = `${fontSize}px 'Noto Serif SC', serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Text shadow / halo
+    ctx.shadowColor = `rgba(200,146,42,${alpha * 0.6})`;
+    ctx.shadowBlur = 8;
+    ctx.fillStyle = `rgba(232,184,75,${alpha})`;
+    ctx.fillText(node.text, sx, sy - nodeSize * 1.5);
+    ctx.shadowBlur = 0;
+  });
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>
