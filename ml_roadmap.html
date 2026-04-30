@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ML / AI 自学路线图</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Serif SC', Georgia, serif;
+      background: #F7F3EE;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    #header {
+      background: #1a1a1a;
+      padding: 28px 24px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    #header .label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    #header h1 {
+      font-size: 20px;
+      color: #F7F3EE;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* ── Tab Nav ── */
+    #tabs {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 8px 4px 6px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      background: rgba(255,255,255,0.08);
+    }
+    .tab-btn .tab-icon { font-size: 18px; display: block; }
+    .tab-btn .tab-title {
+      font-size: 10px;
+      margin-top: 2px;
+      color: #aaa;
+      font-weight: 400;
+      display: block;
+      font-family: 'Noto Serif SC', serif;
+    }
+    .tab-btn .tab-count {
+      font-size: 9px;
+      color: #666;
+      margin-top: 1px;
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── Progress ── */
+    #progress-wrap {
+      padding: 16px 20px 0;
+    }
+    #progress-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    #progress-meta .subtitle { font-size: 11px; color: #888; }
+    #progress-meta .pct {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    #progress-track {
+      height: 4px;
+      background: #E0DAD2;
+      border-radius: 2px;
+    }
+    #progress-bar {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* ── Content ── */
+    #content {
+      padding: 16px 20px 40px;
+    }
+
+    .module-card {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .module-header {
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .module-week {
+      font-size: 10px;
+      letter-spacing: 1px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .module-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-top: 1px;
+    }
+    .module-counter {
+      font-size: 11px;
+      background: rgba(255,255,255,0.6);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .module-items { padding: 4px 16px 8px; }
+
+    /* ── Check Item ── */
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      user-select: none;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 2px solid #999;
+      background: transparent;
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .check-box.done {
+      border: none;
+      background: #555;
+    }
+    .check-box .tick {
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      display: none;
+    }
+    .check-box.done .tick { display: block; }
+    .check-text {
+      font-size: 13.5px;
+      color: #2a2a2a;
+      line-height: 1.5;
+      transition: color 0.2s;
+    }
+    .check-text.done {
+      color: #aaa;
+      text-decoration: line-through;
+    }
+    .check-resource {
+      font-size: 11.5px;
+      color: #888;
+      margin-top: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .check-resource a {
+      color: #6A9BBF;
+      text-decoration: none;
+    }
+    .check-resource a:hover { text-decoration: underline; }
+
+    /* ── Time Estimate ── */
+    #time-estimate {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #time-estimate .te-label {
+      font-size: 10px;
+      color: #888;
+      letter-spacing: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    #time-estimate .te-weeks {
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    #time-estimate .te-note {
+      font-size: 11px;
+      color: #666;
+      text-align: right;
+      line-height: 1.7;
+    }
+
+    /* ── Save indicator ── */
+    #save-indicator {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: #1a1a1a;
+      color: #aaa;
+      font-size: 10px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    #save-indicator.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <div class="label">ML / AI 自学路线图</div>
+  <h1>三个目标 · 一条路</h1>
+  <div id="tabs"></div>
+</div>
+
+<div id="progress-wrap">
+  <div id="progress-meta">
+    <span class="subtitle" id="prog-subtitle"></span>
+    <span class="pct" id="prog-pct"></span>
+  </div>
+  <div id="progress-track">
+    <div id="progress-bar"></div>
+  </div>
+</div>
+
+<div id="content"></div>
+<div id="save-indicator">已保存 ✓</div>
+
+<script>
+const STORAGE_KEY = "ml_roadmap_checked_v1";
+
+const roadmap = [
+  {
+    id: "math",
+    title: "数学基础",
+    subtitle: "够看懂论文就行",
+    color: "#E8D5B7",
+    accent: "#C4A882",
+    weeks: "4–6 周",
+    icon: "∑",
+    modules: [
+      {
+        week: "Week 1–2",
+        title: "线性代数",
+        items: [
+          { task: "向量与矩阵基础（加减乘、转置）", resource: "3Blue1Brown《线性代数本质》", link: "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab" },
+          { task: "矩阵乘法的几何意义", resource: "同上", link: null },
+          { task: "特征值与特征向量", resource: "3B1B + Gilbert Strang MIT 18.06", link: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/" },
+          { task: "SVD分解（够理解PCA就行）", resource: "StatQuest YouTube", link: "https://www.youtube.com/watch?v=FgakZw6K1QQ" },
+        ]
+      },
+      {
+        week: "Week 3–4",
+        title: "微积分（重点：多变量）",
+        items: [
+          { task: "导数、链式法则——反向传播的核心", resource: "3B1B《微积分本质》", link: "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr" },
+          { task: "偏导数与梯度", resource: "Khan Academy 多变量微积分", link: "https://www.khanacademy.org/math/multivariable-calculus" },
+          { task: "梯度下降手推一遍", resource: "自己用NumPy写一个", link: null },
+          { task: "泰勒展开（理解近似）", resource: "维基 + 习题", link: null },
+        ]
+      },
+      {
+        week: "Week 5–6",
+        title: "概率统计",
+        items: [
+          { task: "概率基础：条件概率、贝叶斯定理", resource: "StatQuest 统计系列", link: "https://www.youtube.com/c/joshstarmer" },
+          { task: "常见分布：高斯、伯努利、多项式", resource: "同上", link: null },
+          { task: "最大似然估计（MLE）", resource: "StatQuest", link: null },
+          { task: "信息熵、KL散度（看Transformer论文必备）", resource: "Towards Data Science 博客", link: null },
+        ]
+      }
+    ]
+  },
+  {
+    id: "code",
+    title: "Python + PyTorch",
+    subtitle: "从能跑到能改",
+    color: "#C8D8E8",
+    accent: "#6A9BBF",
+    weeks: "4–6 周",
+    icon: "⌨",
+    modules: [
+      {
+        week: "Week 1–2",
+        title: "Python 基础扫盲",
+        items: [
+          { task: "数据类型、列表推导、字典", resource: "官方 Tutorial / CS50P", link: "https://cs50.harvard.edu/python/" },
+          { task: "函数、类、模块", resource: "CS50P", link: null },
+          { task: "NumPy：数组操作、广播机制", resource: "NumPy官方 + Jake VanderPlas《Python数据科学手册》", link: "https://jakevdp.github.io/PythonDataScienceHandbook/" },
+          { task: "Pandas 基础（够读数据集就行）", resource: "同上", link: null },
+        ]
+      },
+      {
+        week: "Week 3–4",
+        title: "PyTorch 核心",
+        items: [
+          { task: "Tensor操作（和NumPy对照学）", resource: "PyTorch官方 60分钟入门", link: "https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html" },
+          { task: "autograd自动求导机制", resource: "同上", link: null },
+          { task: "nn.Module：自定义网络层", resource: "PyTorch官方 + Andrej Karpathy micrograd", link: "https://github.com/karpathy/micrograd" },
+          { task: "DataLoader + Dataset", resource: "PyTorch官方文档", link: "https://pytorch.org/tutorials/beginner/data_loading_tutorial.html" },
+          { task: "训练循环：前向、loss、反向、optimizer", resource: "手写一遍", link: null },
+        ]
+      },
+      {
+        week: "Week 5–6",
+        title: "跑起来真实模型",
+        items: [
+          { task: "用PyTorch复现MNIST手写数字识别", resource: "LeCun经典任务，教程极多", link: null },
+          { task: "HuggingFace Transformers 调用预训练模型", resource: "HuggingFace 官方课程（免费）", link: "https://huggingface.co/learn/nlp-course" },
+          { task: "Fine-tune 一个小分类任务", resource: "同上第三章", link: null },
+          { task: "理解训练日志：loss曲线、过拟合判断", resource: "实践中学", link: null },
+        ]
+      }
+    ]
+  },
+  {
+    id: "project",
+    title: "做出东西",
+    subtitle: "能放 GitHub 的项目",
+    color: "#D4E8D0",
+    accent: "#7AB87A",
+    weeks: "2–4 周",
+    icon: "◈",
+    modules: [
+      {
+        week: "Option A（推荐新手）",
+        title: "情感分析小工具",
+        items: [
+          { task: "用HuggingFace预训练模型做中/英文情感分类", resource: "distilbert / chinese-roberta", link: "https://huggingface.co/models" },
+          { task: "Gradio做一个Web界面（10行代码）", resource: "Gradio官网", link: "https://www.gradio.app/" },
+          { task: "写 README：问题描述、方法、演示截图", resource: "GitHub README模板", link: null },
+          { task: "推到 GitHub + 部署到 HuggingFace Spaces", resource: "免费部署，有URL可以分享", link: "https://huggingface.co/spaces" },
+        ]
+      },
+      {
+        week: "Option B（稍有挑战）",
+        title: "从零实现一个小Transformer",
+        items: [
+          { task: "跟 Andrej Karpathy《makemore》系列复现", resource: "YouTube：Andrej Karpathy", link: "https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ" },
+          { task: "实现 bigram → MLP → Transformer 逐步升级", resource: "同上", link: null },
+          { task: "在小数据集（莎士比亚文本）上训练", resource: "karpathy/makemore repo", link: "https://github.com/karpathy/makemore" },
+          { task: "写 README 解释每步的数学原理", resource: "自己写，锻炼表达能力", link: null },
+        ]
+      },
+      {
+        week: "GitHub 规范",
+        title: "让项目看起来正经",
+        items: [
+          { task: "README：背景 / 方法 / 结果 / 使用方法", resource: "参考 paperswithcode 上的项目", link: null },
+          { task: "requirements.txt 或 environment.yml", resource: "conda / pip", link: null },
+          { task: "Jupyter Notebook + .py 都保留", resource: "Notebook展示过程，.py做复用", link: null },
+          { task: "加一个 demo gif 或截图", resource: "用 Gifox / Kap 录屏", link: null },
+        ]
+      }
+    ]
+  }
+];
+
+// ── State ──
+let checked = {};
+let activeId = "math";
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) checked = JSON.parse(raw);
+  } catch(e) {}
+}
+
+let saveTimer = null;
+function saveToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+  const ind = document.getElementById("save-indicator");
+  ind.classList.add("show");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => ind.classList.remove("show"), 1500);
+}
+
+function getSection() {
+  return roadmap.find(s => s.id === activeId);
+}
+
+function sectionProgress(section) {
+  let total = 0, done = 0;
+  section.modules.forEach((mod, mi) => {
+    mod.items.forEach((_, ii) => {
+      total++;
+      if (checked[`${section.id}-${mi}-${ii}`]) done++;
+    });
+  });
+  return { total, done, pct: total ? Math.round(done / total * 100) : 0 };
+}
+
+// ── Render Tabs ──
+function renderTabs() {
+  const container = document.getElementById("tabs");
+  container.innerHTML = "";
+  roadmap.forEach(s => {
+    const { done, total } = sectionProgress(s);
+    const isActive = s.id === activeId;
+    const btn = document.createElement("button");
+    btn.className = "tab-btn";
+    btn.style.background = isActive ? s.color : "rgba(255,255,255,0.08)";
+    btn.innerHTML = `
+      <span class="tab-icon">${s.icon}</span>
+      <span class="tab-title" style="color:${isActive ? "#2a2a2a" : "#aaa"}; font-weight:${isActive ? "600" : "400"}">${s.title}</span>
+      <span class="tab-count" style="color:${isActive ? s.accent : "#666"}">${done}/${total}</span>
+    `;
+    btn.addEventListener("click", () => {
+      activeId = s.id;
+      render();
+    });
+    container.appendChild(btn);
+  });
+}
+
+// ── Render Progress ──
+function renderProgress() {
+  const s = getSection();
+  const { pct, done, total } = sectionProgress(s);
+  document.getElementById("prog-subtitle").textContent = s.subtitle;
+  document.getElementById("prog-pct").textContent = `${pct}% · ${done}/${total} 完成`;
+  document.getElementById("prog-pct").style.color = s.accent;
+  document.getElementById("progress-bar").style.width = `${pct}%`;
+  document.getElementById("progress-bar").style.background = s.accent;
+}
+
+// ── Render Content ──
+function renderContent() {
+  const s = getSection();
+  const container = document.getElementById("content");
+  container.innerHTML = "";
+
+  s.modules.forEach((mod, mi) => {
+    const doneCnt = mod.items.filter((_, ii) => checked[`${s.id}-${mi}-${ii}`]).length;
+
+    const card = document.createElement("div");
+    card.className = "module-card";
+
+    const hdr = document.createElement("div");
+    hdr.className = "module-header";
+    hdr.style.background = s.color;
+    hdr.innerHTML = `
+      <div>
+        <div class="module-week" style="color:${s.accent}">${mod.week}</div>
+        <div class="module-title">${mod.title}</div>
+      </div>
+      <div class="module-counter" style="color:${s.accent}" id="counter-${mi}">${doneCnt}/${mod.items.length}</div>
+    `;
+    card.appendChild(hdr);
+
+    const itemsWrap = document.createElement("div");
+    itemsWrap.className = "module-items";
+
+    mod.items.forEach((item, ii) => {
+      const key = `${s.id}-${mi}-${ii}`;
+      const isDone = !!checked[key];
+
+      const row = document.createElement("div");
+      row.className = "check-item";
+
+      const box = document.createElement("div");
+      box.className = "check-box" + (isDone ? " done" : "");
+      box.innerHTML = `<span class="tick">✓</span>`;
+
+      const textWrap = document.createElement("div");
+      textWrap.style.flex = "1";
+
+      const taskEl = document.createElement("div");
+      taskEl.className = "check-text" + (isDone ? " done" : "");
+      taskEl.textContent = item.task;
+      textWrap.appendChild(taskEl);
+
+      if (item.resource) {
+        const res = document.createElement("div");
+        res.className = "check-resource";
+        if (item.link) {
+          res.innerHTML = `<a href="${item.link}" target="_blank" rel="noreferrer">📎 ${item.resource}</a>`;
+        } else {
+          res.textContent = `→ ${item.resource}`;
+        }
+        textWrap.appendChild(res);
+      }
+
+      row.appendChild(box);
+      row.appendChild(textWrap);
+
+      row.addEventListener("click", (e) => {
+        if (e.target.tagName === "A") return;
+        checked[key] = !checked[key];
+        saveToStorage();
+        // update this item
+        box.classList.toggle("done", !!checked[key]);
+        taskEl.classList.toggle("done", !!checked[key]);
+        // update counter
+        const newDone = mod.items.filter((_, i) => checked[`${s.id}-${mi}-${i}`]).length;
+        document.getElementById(`counter-${mi}`).textContent = `${newDone}/${mod.items.length}`;
+        // update tabs + progress without full re-render
+        renderTabs();
+        renderProgress();
+      });
+
+      itemsWrap.appendChild(row);
+    });
+
+    card.appendChild(itemsWrap);
+    container.appendChild(card);
+  });
+
+  // Time estimate
+  const te = document.createElement("div");
+  te.id = "time-estimate";
+  te.innerHTML = `
+    <div>
+      <div class="te-label">预计时长</div>
+      <div class="te-weeks" style="color:${s.color}">${s.weeks}</div>
+    </div>
+    <div class="te-note">每天 1–2 小时<br>周末多投入一些</div>
+  `;
+  container.appendChild(te);
+}
+
+function render() {
+  renderTabs();
+  renderProgress();
+  renderContent();
+}
+
+loadFromStorage();
+render();
+</script>
+</body>
+</html>
