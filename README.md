@@ -1,2 +1,2 @@
 # longmingYZR.github.io
-personal page, la pagina personal
+personal page
